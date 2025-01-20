@@ -25,9 +25,11 @@ class Application
         $this->response = new Response();
         $this->router = new Router($this->request, $this->response);
         $this->view = new View(LAYOUT);
-        $this->db = new Database();
+        $this->db = (Database::getInstance())->getConnection();
         $this->session = new Session();
         $this->cache = new Cache();
+        $this->generateCsrfToken();
+		Auth::setUser();
     }
 
     public function run(): void
@@ -45,4 +47,11 @@ class Application
         $this->container[$key] = $value;
     }
 
+	public function generateCsrfToken(): void
+    {
+        if (!session()->has('csrf_token')) {
+            session()->set('csrf_token', md5(uniqid(mt_rand(), true)));
+            session()->set('csrf_token_time', time());
+        }
+    }
 }

@@ -6,184 +6,191 @@
  * License: https:///bootstrapmade.com/license/
  */
 document.addEventListener('DOMContentLoaded', () => {
-    "use strict";
+	'use strict';
 
-    /**
-     * Sticky header on scroll
-     */
-    const selectHeader = document.querySelector('#header');
-    if (selectHeader) {
-        document.addEventListener('scroll', () => {
-            window.scrollY > 100 ? selectHeader.classList.add('sticked') : selectHeader.classList.remove('sticked');
-        });
-    }
+	/**
+	 * Sticky header on scroll
+	 */
+	const selectHeader = document.querySelector('#header');
+	if (selectHeader) {
+		document.addEventListener('scroll', () => {
+			window.scrollY > 100
+				? selectHeader.classList.add('sticked')
+				: selectHeader.classList.remove('sticked');
+		});
+	}
 
-    /**
-     * Mobile nav toggle
-     */
+	/**
+	 * Mobile nav toggle
+	 */
 
-    const mobileNavToogleButton = document.querySelector('.mobile-nav-toggle');
+	const mobileNavToogleButton = document.querySelector('.mobile-nav-toggle');
 
-    if (mobileNavToogleButton) {
-        mobileNavToogleButton.addEventListener('click', function(event) {
-            event.preventDefault();
-            mobileNavToogle();
-        });
-    }
+	if (mobileNavToogleButton) {
+		mobileNavToogleButton.addEventListener('click', function (event) {
+			event.preventDefault();
+			mobileNavToogle();
+		});
+	}
 
-    function mobileNavToogle() {
-        document.querySelector('body').classList.toggle('mobile-nav-active');
-        mobileNavToogleButton.classList.toggle('bi-list');
-        mobileNavToogleButton.classList.toggle('bi-x');
-    }
+	function mobileNavToogle() {
+		document.querySelector('body').classList.toggle('mobile-nav-active');
+		mobileNavToogleButton.classList.toggle('bi-list');
+		mobileNavToogleButton.classList.toggle('bi-x');
+	}
 
-    /**
-     * Hide mobile nav on same-page/hash links
-     */
-    document.querySelectorAll('#navbar a').forEach(navbarlink => {
+	/**
+	 * Hide mobile nav on same-page/hash links
+	 */
+	document.querySelectorAll('#navbar a').forEach((navbarlink) => {
+		if (!navbarlink.hash) return;
 
-        if (!navbarlink.hash) return;
+		let section = document.querySelector(navbarlink.hash);
+		if (!section) return;
 
-        let section = document.querySelector(navbarlink.hash);
-        if (!section) return;
+		navbarlink.addEventListener('click', () => {
+			if (document.querySelector('.mobile-nav-active')) {
+				mobileNavToogle();
+			}
+		});
+	});
 
-        navbarlink.addEventListener('click', () => {
-            if (document.querySelector('.mobile-nav-active')) {
-                mobileNavToogle();
-            }
-        });
-    });
+	/**
+	 * Toggle mobile nav dropdowns
+	 */
+	const navDropdowns = document.querySelectorAll('.navbar .dropdown > a');
 
-    /**
-     * Toggle mobile nav dropdowns
-     */
-    const navDropdowns = document.querySelectorAll('.navbar .dropdown > a');
+	navDropdowns.forEach((el) => {
+		el.addEventListener('click', function (event) {
+			if (document.querySelector('.mobile-nav-active')) {
+				event.preventDefault();
+				this.classList.toggle('active');
+				this.nextElementSibling.classList.toggle('dropdown-active');
 
-    navDropdowns.forEach(el => {
-        el.addEventListener('click', function(event) {
-            if (document.querySelector('.mobile-nav-active')) {
-                event.preventDefault();
-                this.classList.toggle('active');
-                this.nextElementSibling.classList.toggle('dropdown-active');
+				let dropDownIndicator = this.querySelector(
+					'.dropdown-indicator'
+				);
+				dropDownIndicator.classList.toggle('bi-chevron-up');
+				dropDownIndicator.classList.toggle('bi-chevron-down');
+			}
+		});
+	});
 
-                let dropDownIndicator = this.querySelector('.dropdown-indicator');
-                dropDownIndicator.classList.toggle('bi-chevron-up');
-                dropDownIndicator.classList.toggle('bi-chevron-down');
-            }
-        })
-    });
+	/**
+	 * Scroll top button
+	 */
+	const scrollTop = document.querySelector('.scroll-top');
+	if (scrollTop) {
+		const togglescrollTop = function () {
+			window.scrollY > 100
+				? scrollTop.classList.add('active')
+				: scrollTop.classList.remove('active');
+		};
+		window.addEventListener('load', togglescrollTop);
+		document.addEventListener('scroll', togglescrollTop);
+	}
 
-    /**
-     * Scroll top button
-     */
-    const scrollTop = document.querySelector('.scroll-top');
-    if (scrollTop) {
-        const togglescrollTop = function() {
-            window.scrollY > 100 ? scrollTop.classList.add('active') : scrollTop.classList.remove('active');
-        }
-        window.addEventListener('load', togglescrollTop);
-        document.addEventListener('scroll', togglescrollTop);
-    }
+	/**
+	 * Hero Slider
+	 */
+	var swiper = new Swiper('.sliderFeaturedPosts', {
+		spaceBetween: 0,
+		speed: 500,
+		centeredSlides: true,
+		loop: true,
+		slideToClickedSlide: true,
+		autoplay: {
+			delay: 3000,
+			disableOnInteraction: false,
+		},
+		pagination: {
+			el: '.swiper-pagination',
+			clickable: true,
+		},
+		navigation: {
+			nextEl: '.custom-swiper-button-next',
+			prevEl: '.custom-swiper-button-prev',
+		},
+	});
 
-    /**
-     * Hero Slider
-     */
-    var swiper = new Swiper(".sliderFeaturedPosts", {
-        spaceBetween: 0,
-        speed: 500,
-        centeredSlides: true,
-        loop: true,
-        slideToClickedSlide: true,
-        autoplay: {
-            delay: 3000,
-            disableOnInteraction: false,
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-        navigation: {
-            nextEl: ".custom-swiper-button-next",
-            prevEl: ".custom-swiper-button-prev",
-        },
-    });
+	/**
+	 * Open and close the search form.
+	 */
+	const searchOpen = document.querySelector('.js-search-open');
+	const searchClose = document.querySelector('.js-search-close');
+	const searchWrap = document.querySelector('.js-search-form-wrap');
 
-    /**
-     * Open and close the search form.
-     */
-    const searchOpen = document.querySelector('.js-search-open');
-    const searchClose = document.querySelector('.js-search-close');
-    const searchWrap = document.querySelector(".js-search-form-wrap");
+	searchOpen.addEventListener('click', (e) => {
+		e.preventDefault();
+		searchWrap.classList.add('active');
+	});
 
-    searchOpen.addEventListener("click", (e) => {
-        e.preventDefault();
-        searchWrap.classList.add("active");
-    });
+	searchClose.addEventListener('click', (e) => {
+		e.preventDefault();
+		searchWrap.classList.remove('active');
+	});
 
-    searchClose.addEventListener("click", (e) => {
-        e.preventDefault();
-        searchWrap.classList.remove("active");
-    });
+	/**
+	 * Initiate glightbox
+	 */
+	const glightbox = GLightbox({
+		selector: '.glightbox',
+	});
 
-    /**
-     * Initiate glightbox
-     */
-    const glightbox = GLightbox({
-        selector: '.glightbox'
-    });
+	/**
+	 * Animation on scroll function and init
+	 */
+	function aos_init() {
+		AOS.init({
+			duration: 1000,
+			easing: 'ease-in-out',
+			once: true,
+			mirror: false,
+		});
+	}
+	window.addEventListener('load', () => {
+		aos_init();
+	});
 
-    /**
-     * Animation on scroll function and init
-     */
-    function aos_init() {
-        AOS.init({
-            duration: 1000,
-            easing: 'ease-in-out',
-            once: true,
-            mirror: false
-        });
-    }
-    window.addEventListener('load', () => {
-        aos_init();
-    });
+	// scroll top
+	document.querySelector('.scroll-top').addEventListener('click', (e) => {
+		e.preventDefault();
+		document.body.scrollTop = 0;
+		document.documentElement.scrollTop = 0;
+	});
 
-    // scroll top
-    document.querySelector(".scroll-top").addEventListener('click', (e) => {
-        e.preventDefault();
-        document.body.scrollTop = 0;
-        document.documentElement.scrollTop = 0;
-    });
+	// login-form
+	let loginForm = document.getElementById('login-form');
+	if (loginForm) {
+		loginForm.addEventListener('submit', (e) => {
+			e.preventDefault();
+			let loginBtn = loginForm.querySelector('button');
+			let loginLoader = loginForm.querySelector('.loading');
+			let loginErrorMessage = loginForm.querySelector('.error-message');
+			loginBtn.disabled = true;
+			loginLoader.classList.add('d-block');
 
-    // login-form
-    let loginForm = document.getElementById('login-form');
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            let loginBtn = loginForm.querySelector('button');
-            let loginLoader = loginForm.querySelector('.loading');
-            let loginErrorMessage = loginForm.querySelector('.error-message');
-            loginBtn.disabled = true;
-            loginLoader.classList.add('d-block');
-            fetch(loginForm.getAttribute('action'), {
-                method: 'POST',
-                body: new FormData(loginForm)
-            })
-                .then((response) => response.json())
-                .then((data) => {
-                    setTimeout(() => {
-                        if (data.status === 'error') {
-                            loginLoader.classList.remove('d-block');
-                            loginErrorMessage.classList.add('d-block');
-                            loginErrorMessage.innerHTML = data.data;
-                            loginBtn.disabled = false;
-                        } else {
-                            window.location = data.data;
-                        }
-                    }, 1000);
-
-                });
-        });
-    }
-
+			try {
+				fetch(loginForm.getAttribute('action'), {
+					method: 'POST',
+					// headers: {'X-Requested-With': 'XMLHttpRequest'},
+					body: new FormData(loginForm),
+				})
+					.then((response) => response.json())
+					.then((data) => {
+						console.log('data: ', data);
+						if (data.status === 'error') {
+							loginLoader.classList.remove('d-block');
+							loginErrorMessage.classList.add('d-block');
+							loginErrorMessage.innerHTML = data.data;
+							loginBtn.disabled = false;
+						} else {
+							window.location = data.data;
+						}
+					});
+			} catch (error) {
+				console.log('error: ', error);
+			}
+		});
+	}
 });
-

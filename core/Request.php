@@ -56,7 +56,7 @@ class Request
     public function getData(): array
     {
         $data = [];
-        $request_data = $this->isGet() ? $_GET : $_POST;
+        $request_data = $this->isPost() ? $_POST : $_GET;
         foreach ($request_data as $k => $v) {
             if (is_string($v)) {
                 $v = trim($v);
@@ -65,6 +65,11 @@ class Request
         }
         return $data;
     }
+
+	public function isAjax (): bool
+	{
+		return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
+	}
 
 }
 

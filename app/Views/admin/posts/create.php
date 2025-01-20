@@ -72,6 +72,17 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Recommended</label>
+                                        <select name="recommended_post_id[]" id="recommended_post_id" class="form-control select2" multiple>
+                                            <?php foreach ($posts as $post): ?>
+                                                <option value="<?= $post['id']; ?>" <?= selected('recommended_post_id', $post['id']); ?>><?= $post['title']; ?></option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="form-group">

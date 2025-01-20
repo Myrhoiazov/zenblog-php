@@ -5,6 +5,8 @@ namespace PHPFramework;
 abstract class Model
 {
 
+	
+
     protected string $table = '';
     protected array $fillable = [];
     public array $attributes = [];
@@ -29,14 +31,22 @@ abstract class Model
 
     public function save(): false|string
     {
-        $fields_keys = array_keys($this->attributes);
+		$attributes = $this->attributes;
+        foreach ($attributes as $k => $v) {
+            if (!in_array($k, $this->fillable)) {
+                unset($attributes[$k]);
+            }
+        }
+
+        $fields_keys = array_keys($attributes);
         $fields = array_map(fn($field) => "`{$field}`", $fields_keys);
         $fields = implode(',', $fields);
 
         $values_placeholders = array_map(fn($v) => ":{$v}", $fields_keys);
         $values_placeholders = implode(',', $values_placeholders);
         $query = "INSERT INTO {$this->table} ($fields) VALUES ($values_placeholders)";
-        db()->query($query, $this->attributes);
+
+        db()->query($query, $attributes);
         return db()->getInsertId();
     }
 

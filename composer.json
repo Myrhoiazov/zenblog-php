@@ -1,13 +1,14 @@
 {
-  "autoload": {
-    "psr-4": {
-      "PHPFramework\\": "core/",
-      "App\\": "app/"
-    }
-  },
-  "require": {
-    "symfony/var-dumper": "^6.0",
-    "ext-pdo": "*",
-    "phpmailer/phpmailer": "^6.9"
-  }
+	"autoload": {
+		"psr-4": {
+			"PHPFramework\\": "core/",
+			"App\\": "app/",
+			"Service\\": "services/"
+		}
+	},
+	"require": {
+		"symfony/var-dumper": "^6.0",
+		"ext-pdo": "*",
+		"phpmailer/phpmailer": "^6.9"
+	}
 }

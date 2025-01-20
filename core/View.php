@@ -53,5 +53,4 @@ class View
             return "File {$view_file} not found";
         }
     }
-
 }

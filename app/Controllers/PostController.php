@@ -11,9 +11,33 @@ class PostController extends BaseController
     {
         $slug = router()->route_params['slug'];
         $post = db()->query("SELECT p.id, p.title, p.slug, p.content, p.image, DATE_FORMAT(p.created_at, '%b %D \'%y') AS created_at, p.views, c.title AS c_title, c.slug AS c_slug FROM posts p JOIN categories c ON c.id = p.category_id WHERE p.slug = ?", [$slug])->getOne();
+
+        
         if (!$post) {
             abort();
         }
+
+        $post['recommend_posts'] = [];
+
+        $recommended_posts = db()->query("
+            SELECT 
+                post.id, 
+                post.title, 
+                post.slug, 
+                post.image, 
+                post.excerpt, 
+                post.created_at
+            FROM 
+                recommended_posts rp
+            LEFT JOIN 
+                posts post 
+                ON rp.recommended_post_id = post.id
+            WHERE 
+                rp.post_id = ?
+        ", [$post['id']])->get();
+
+        $post['recommend_posts'] = $recommended_posts ?: '';
+
         db()->query("UPDATE posts SET views = views + 1 WHERE slug = ?", [$slug]);
 
         // Comments

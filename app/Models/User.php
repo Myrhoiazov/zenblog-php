@@ -8,13 +8,13 @@ class User extends Model
 {
 
     protected string $table = 'users';
-    protected array $fillable = ['name', 'email', 'password', 'repassword'];
+    protected array $fillable = ['name', 'email', 'password', 'repassword', 'ressetPassword', 'csrf_token', 'csrf_token_name'];
     protected array $rules = [
         'name' => ['min' => 1, 'max' => 100],
         'email' => ['email' => true, 'max' => 100, 'unique' => 'users:email'],
         'password' => ['min' => 6],
         'repassword' => ['match' => 'password'],
-        'avatar' => ['ext' => 'jpg|png', 'size' => 1_048_576]
+        'avatar' => ['ext' => 'jpg|png|jpeg', 'size' => 1_048_576]
     ];
     protected array $labels = [
         'name' => 'Name',
@@ -33,7 +33,10 @@ class User extends Model
         unset($this->attributes['avatar']);
         $this->attributes['password'] = password_hash($this->attributes['password'], PASSWORD_DEFAULT);
         unset($this->attributes['repassword']);
-
+		unset($this->attributes['ressetPassword']);
+		unset($this->attributes['csrf_token']);
+		unset($this->attributes['csrf_token_name']);
+		
         $id = $this->save();
         if ($avatar) {
             if ($file_url = upload_file($avatar)) {

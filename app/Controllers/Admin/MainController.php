@@ -12,6 +12,7 @@ class MainController extends BaseController
         $categories = db()->count('categories');
         $posts = db()->count('posts');
         $title = 'Main admin page';
+
         return view('admin/main', compact('title', 'comments', 'users', 'categories', 'posts'));
     }
 

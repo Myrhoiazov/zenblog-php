@@ -1,4 +1,4 @@
-<?php echo view()->renderPartial('incs/header', ['title' => $title]); ?>
+<?php echo view()->renderPartial('incs/header', ['title' => $title, 'styles' => $styles, 'header_scripts' => $header_scripts]); ?>
 
 <main id="main">
     <section>
@@ -97,7 +97,7 @@
                     <div class="aside-block">
                         <h3 class="aside-title">Video</h3>
                         <div class="video-post">
-                            <a href="https://www.youtube.com/watch?v=AiFfDjmd0jU" class="glightbox link-video">
+                            <a href="https://www.youtube.com/watch?v=KQYsuhhntPU" class="glightbox link-video">
                                 <span class="bi-play-fill"></span>
                                 <img src="assets/img/post-landscape-5.jpg" alt="" class="img-fluid">
                             </a>
@@ -134,4 +134,4 @@
     </section>
 </main><!-- End #main -->
 
-<?php echo view()->renderPartial('incs/footer'); ?>
+<?php echo view()->renderPartial('incs/footer', ['footer_scripts' => $footer_scripts]); ?>

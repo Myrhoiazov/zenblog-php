@@ -8,7 +8,7 @@ class Comment extends Model
 {
 
     protected string $table = 'comments';
-    protected array $fillable = ['parent_id', 'post_id', 'message'];
+    protected array $fillable = ['parent_id', 'post_id', 'message', 'user_id'];
 
     protected array $rules = [
         'parent_id' => ['int' => true],

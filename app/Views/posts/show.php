@@ -84,10 +84,8 @@
 
             <form action="<?= base_url("/comment/store"); ?>" class="php-email-form" method="post" id="comment-form">
                 <div class="row">
-
                     <div class="col-12 mb-3">
                         <label for="comment-message">Message</label>
-
                         <textarea name="message" class="form-control" id="comment-message" placeholder="Enter your name"
                                   cols="30"
                                   rows="10"></textarea>
@@ -103,6 +101,7 @@
                         <input type="hidden" name="parent_id" id="parent_id" value="0">
                         <input type="hidden" name="post_id" id="post_id" value="<?= $post['id']; ?>">
                         <input type="submit" class="btn btn-primary" value="Post comment">
+						<?= get_csrf_field() ?>
                     </div>
                 </div>
             </form>
@@ -111,6 +110,22 @@
     </div><!-- End Comments Form -->
     <?php //endif; ?>
 
+    <?php if(isset($post['recommend_posts']) && !empty($post['recommend_posts'])):?>
+        <div class="row mt-5">
+            <h2>Recommended Posts</h2>
+            <?php foreach($post['recommend_posts'] as $i => $postEl): ?>
+                <div class="col-4">
+                    <a href="/post/<?=$postEl['slug']?>">
+                        <h3 class="fs-5 mb-3"> <?= $postEl['title'] ?></h3>
+                        <div class="mb-2">
+                            <img class="img-thumbnail" src="<?= $postEl['image'] ?>" alt="<?= $postEl['title'] ?>" >
+                        </div>
+                        <p><?= $postEl['excerpt'] ?></p>
+                    </a>
+                </div>
+            <?php endforeach;?>
+        </div>
+    <?php endif; ?>
 </div>
 
 <script>
@@ -138,22 +153,21 @@
         })
             .then((response) => response.json())
             .then((data) => {
-                setTimeout(() => {
-                    loader.classList.remove('d-block');
-                    if (data.status === 'error') {
-                        if ('redirect' in data) {
-                            window.location = data.redirect;
-                            return false;
-                        }
-                        errorMessage.classList.add('d-block');
-                        errorMessage.innerHTML = data.data;
-                    } else {
-                        sentMessage.classList.add('d-block');
-                        sentMessage.innerHTML = data.data;
-                        document.getElementById('parent_id').value = 0;
-                        document.getElementById('comment-message').value = '';
-                    }
-                }, 1000);
+				console.log("data: ", data);
+                loader.classList.remove('d-block');
+				if (data.status === 'error') {
+					if ('redirect' in data) {
+						window.location = data.redirect;
+						return false;
+					}
+					errorMessage.classList.add('d-block');
+					errorMessage.innerHTML = data.data;
+				} else {
+					sentMessage.classList.add('d-block');
+					sentMessage.innerHTML = data.data;
+					document.getElementById('parent_id').value = 0;
+					document.getElementById('comment-message').value = '';
+				}
             });
     });
 </script>

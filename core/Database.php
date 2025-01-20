@@ -2,14 +2,38 @@
 
 namespace PHPFramework;
 
+use PHPFramework\Singleton;
+
 class Database
 {
+	use Singleton;
 
+	// private static $instance = null;
     protected \PDO $connection;
     protected \PDOStatement $stmt;
     protected array $queries = [];
 
-    public function __construct()
+	// private function __construct()
+    // {
+    // }
+
+    // private function __clone()
+    // {
+    // }
+
+    // public function __wakeup()
+    // {
+    // }
+
+	// public static function getInstance()
+    // {
+    //     if (self::$instance === null) {
+    //         self::$instance = new self();
+    //     }
+    //     return self::$instance;
+    // }
+
+    public function getConnection()
     {
         $dsn = "mysql:host=" . DB['host'] . ";dbname=" . DB['dbname'] . ";charset=" . DB['charset'];
         try {
@@ -31,6 +55,7 @@ class Database
                 $this->stmt->debugDumpParams();
                 $this->queries[] = ob_get_clean();
             }
+
         } catch (\PDOException $e) {
             error_log("[" . date('Y-m-d H:i:s') . "] DB Error: {$e->getMessage()}" . PHP_EOL, 3, ERROR_LOG_FILE);
             abort($e->getMessage(), 500);

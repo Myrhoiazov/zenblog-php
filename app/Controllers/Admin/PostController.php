@@ -24,13 +24,15 @@ class PostController extends BaseController
     {
         $categories = db()->findAll('categories');
         $tags = db()->findAll('tags');
-        return view('admin/posts/create', ['title' => 'Create post', 'categories' => $categories, 'tags' => $tags, 'errors' => session()->get('form_errors')]);
+        $posts = db()->findAll('posts');
+        return view('admin/posts/create', ['title' => 'Create post', 'posts' => $posts, 'categories' => $categories, 'tags' => $tags, 'errors' => session()->get('form_errors')]);
     }
 
     public function store()
     {
         $model = new Post();
         $model->loadData();
+
         if (isset($_FILES['image'])) {
             $model->attributes['image'] = $_FILES['image'];
         } else {
@@ -58,15 +60,34 @@ class PostController extends BaseController
         $id = request()->get('id');
         $post = db()->findOrFail('posts', $id);
         $categories = db()->findAll('categories');
+        $posts = db()->findAll("posts");
         $tags = db()->findAll('tags');
         $post_tags = db()->query("SELECT tag_id FROM post_tag WHERE post_id = ?", [$id])->get();
         $post['tags'] = [];
+
+        $recommended_id = db()->query("SELECT recommended_post_id FROM recommended_posts WHERE post_id = ?", [$id])->get();
+        $recommended_posts = [];
+
+        if (count($recommended_id)) {
+
+            $posts['recommended_posts'] = [];
+
+            foreach ($recommended_id as $recommended) {
+                $recommended_post = db()->query("SELECT * FROM posts WHERE id = ?", [$recommended['recommended_post_id']])->get();
+                $post['recommended_posts'][] = $recommended_post[0]['id'];
+                $posts['recommended_posts'][$recommended_post[0]['id']] = $recommended_post[0];
+                $recommended_posts[$recommended_post[0]['id']] = $recommended_post[0];
+            }
+        }
+
+
         if ($post_tags) {
             foreach ($post_tags as $post_tag) {
                 $post['tags'][] = $post_tag['tag_id'];
             }
         }
-        return view('admin/posts/edit', ['title' => 'Edit post', 'categories' => $categories, 'tags' => $tags, 'post' => $post, 'errors' => session()->get('form_errors')]);
+
+        return view('admin/posts/edit', ['title' => 'Edit post', 'categories' => $categories, 'tags' => $tags, 'post' => $post, 'recommended_posts' => $recommended_posts, 'posts' => $posts, 'errors' => session()->get('form_errors')]);
     }
 
     public function update()
@@ -77,11 +98,13 @@ class PostController extends BaseController
         $model = new Post();
         $model->loadData();
         $model->attributes['id'] = $id;
+
         if (isset($_FILES['image'])) {
             $model->attributes['image'] = $_FILES['image'];
         } else {
             $model->attributes['image'] = [];
         }
+
         if (!$model->validate($model->attributes, [
             'title' => ['required' => true, 'max' => 255],
             'slug' => ['required' => true, 'max' => 255, 'unique' => 'posts:slug,id'],

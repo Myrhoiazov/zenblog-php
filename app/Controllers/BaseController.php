@@ -25,5 +25,4 @@ class BaseController extends Controller
         $tags = db()->findAll('tags');
         app()->set('tags', $tags);
     }
-
 }

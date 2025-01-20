@@ -1,0 +1,165 @@
+/* Trees Image - Pexels: https://www.pexels.com/photo/photo-of-trees-in-forest-3801030/ */
+@import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
+
+html,
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+:root {
+	--column-1: #a2622d;
+	--column-2: #1b6161;
+	--column-3: #248224;
+	--column-4: #a22d22;
+}
+
+body {
+	margin: 0;
+}
+
+.app {
+	display: flex;
+	flex-direction: column;
+	height: 60vh;
+	padding: 50px 0;
+}
+
+.boards {
+	display: flex;
+	width: 100%;
+}
+
+.boards__item {
+	display: flex;
+	flex-direction: column;
+	align-self: baseline;
+	max-width: 250px;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.5);
+	margin: 0 15px;
+	padding: 10px;
+	transition: all.3s ease;
+	border-radius: 3px;
+}
+
+.title {
+	padding: 5px;
+}
+
+.title:focus {
+	outline: 1px solid rgba(168, 168, 168, 0.45);
+}
+
+.list {
+	min-height: 40px;
+}
+
+.list__item {
+	color: #000;
+	background-color: #fefefe;
+	border-radius: 3px;
+	padding: 10px;
+	text-align: center;
+	margin: 10px 0;
+	cursor: pointer;
+	font-weight: normal;
+	font-size: 14px;
+	outline: none;
+	border: none;
+}
+
+.form {
+	border-radius: 3px;
+	margin-top: auto;
+	box-sizing: border-box;
+
+	display: none;
+}
+
+.textarea {
+	display: block;
+	resize: none;
+	height: 60px;
+	border: none;
+	border-radius: 3px;
+	background-color: #fff;
+	padding: 10px;
+	width: 100%;
+}
+
+.textarea:focus {
+	outline: none;
+}
+
+.buttons {
+	margin-top: 10px;
+	display: flex;
+	justify-content: space-between;
+}
+
+.add__item-btn {
+	padding: 0 10px;
+	background-color: #01b8b8;
+	border: none;
+	height: 35px;
+	cursor: pointer;
+	color: #fff;
+	border-radius: 3px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin-right: 10px;
+}
+
+.cancel__item-btn {
+	padding: 0 5px;
+	border: none;
+	height: 35px;
+	cursor: pointer;
+	color: #fff;
+	border-radius: 3px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #c92e20;
+	flex-shrink: 0;
+	margin-left: auto;
+}
+
+.add__btn {
+	cursor: pointer;
+	font-weight: 500;
+	height: 30px;
+	background-color: rgba(155, 155, 155, 0.3);
+	border-radius: 3px;
+	margin-top: 5px;
+	display: flex;
+	align-items: center;
+	padding-left: 10px;
+	color: #fff;
+}
+
+.add__btn span {
+	margin-right: 5px;
+	font-style: 20px;
+}
+
+.button {
+	position: absolute;
+	bottom: 50px;
+	left: 50%;
+	transform: translateX(-50%);
+	height: 35px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	border: none;
+	border-radius: 3px;
+	width: 150px;
+	cursor: pointer;
+	color: #fff;
+	background-color: rgba(211, 108, 23, 0.7);
+}

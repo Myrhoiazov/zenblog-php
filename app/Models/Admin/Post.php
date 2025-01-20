@@ -9,7 +9,7 @@ class Post extends Model
 
     protected string $table = 'posts';
 
-    protected array $fillable = ['title', 'slug', 'excerpt', 'content', 'category_id', 'tag_id'];
+    protected array $fillable = ['title', 'slug', 'excerpt', 'content', 'category_id', 'tag_id', 'recommended_post_id'];
 
     protected array $rules = [
         'title' => ['required' => true, 'max' => 255],
@@ -35,6 +35,9 @@ class Post extends Model
         $tags = $this->attributes['tag_id'] ?: null;
         unset($this->attributes['tag_id']);
 
+        $recommendedPostsId = $this->attributes['recommended_post_id'] ?: null;
+        unset($this->attributes['recommended_post_id']);
+
         $id = $this->save();
         if ($image) {
             if ($file_url = upload_file($image)) {
@@ -48,6 +51,12 @@ class Post extends Model
             }
         }
 
+        if (count($recommendedPostsId)) {
+            foreach ($recommendedPostsId as $recommended_id) {
+                db()->query("INSERT INTO recommended_posts (post_id, recommended_post_id) VALUES (?, ?)", [$id, $recommended_id]);
+            }
+        }
+
         return $id;
     }
 
@@ -58,20 +67,37 @@ class Post extends Model
         $tags = $this->attributes['tag_id'] ?: null;
         unset($this->attributes['tag_id']);
 
+        $recommendedPostsId = $this->attributes['recommended_post_id'] ?: null;
+        unset($this->attributes['recommended_post_id']);
+
         $id = $this->attributes['id'];
         if (false !== $this->update()) {
+
             if ($image) {
                 if ($file_url = upload_file($image)) {
                     db()->query("UPDATE posts SET image = ? WHERE id = ?", [$file_url, $id]);
                 }
             }
 
+            
             db()->query("DELETE FROM post_tag WHERE post_id = ?", [$id]);
             if ($tags) {
                 foreach ($tags as $tag_id) {
                     db()->query("INSERT INTO post_tag (post_id, tag_id) VALUES (?, ?)", [$id, $tag_id]);
                 }
             }
+
+            $post = db()->query("SELECT * FROM recommended_posts WHERE post_id = ?", [$id])->get();
+            if(count($post)){
+                db()->query("DELETE FROM recommended_posts WHERE post_id = ?", [$id]);
+            }
+
+            if (isset($recommendedPostsId) && is_array($recommendedPostsId)) {
+                foreach ($recommendedPostsId as $recommended_id) {
+                    db()->query("INSERT INTO recommended_posts (post_id, recommended_post_id) VALUES (?, ?)", [$id, $recommended_id]);
+                }
+            }
+
             return true;
         }
         return false;

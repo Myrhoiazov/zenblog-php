@@ -7,6 +7,7 @@ use PHPFramework\Controller;
 class BaseController extends Controller
 {
 
+	public string $title = '';
     public string $layout = 'admin';
 
     public function __construct()

@@ -1,6 +1,5 @@
 <!-- ======= Footer ======= -->
 <footer id="footer" class="footer">
-
     <div class="footer-content">
         <div class="container">
 
@@ -132,6 +131,12 @@
 <script src="<?= base_url('/assets/vendor/glightbox/js/glightbox.min.js'); ?>"></script>
 <script src="<?= base_url('/assets/vendor/aos/aos.js'); ?>"></script>
 <!--<script src="--><?php //= base_url('/assets/vendor/php-email-form/validate.js'); ?><!--"></script>-->
+
+<?php if (!empty($footer_scripts)): ?>
+	<?php foreach ($footer_scripts as $footer_script): ?>
+		<script src="<?= $footer_script; ?>"></script>
+	<?php endforeach; ?>
+<?php endif; ?>
 
 <!-- Template Main JS File -->
 <script src="<?= base_url('/assets/js/main.js'); ?>"></script>

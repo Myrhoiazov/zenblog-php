@@ -16,6 +16,14 @@ function view($view = '', $data = [], $layout = ''): string|\PHPFramework\View
     return app()->view;
 }
 
+function viewEmail($view = '', $data = [], $layout = ''): string|\PHPFramework\View
+{
+    if ($view) {
+        return app()->view->render($view, $data, $layout);
+    }
+    return app()->view;
+}
+
 function request(): \PHPFramework\Request
 {
     return app()->request;
@@ -157,8 +165,22 @@ function is_admin(): bool
 {
     return check_auth() && (session()->get('user')['role'] == 1);
 }
+function is_user(): bool
+{
+    return check_auth() && (session()->get('user')['role'] == 0);
+}
 
-function send_mail(array $to, string $subject, string $body, array $attachments = []): bool
+function get_csrf_field(): string
+{
+    return '<input type="hidden" name="csrf_token" value="' . session()->get('csrf_token') . '">';
+}
+
+function get_csrf_meta(): string
+{
+    return '<meta name="csrf-token" content="' . session()->get('csrf_token') . '">';
+}
+
+function send_mail(array $to, string $subject, string $tpl, array $data = [], array $attachments = []): bool
 {
     $mail = new \PHPMailer\PHPMailer\PHPMailer(true);
     try {
@@ -188,9 +210,11 @@ function send_mail(array $to, string $subject, string $body, array $attachments 
         //Content
         $mail->isHTML(EMAIL['is_html']);
         $mail->Subject = $subject;
-        $mail->Body = $body;
+        $mail->Body = viewEmail($tpl, $data, false);
+
         $mail->CharSet = EMAIL['charset'];
         return $mail->send();
+
     } catch (\PHPMailer\PHPMailer\Exception $e) {
         error_log("[" . date('Y-m-d H:i:s') . "] Mail Error: {$mail->ErrorInfo}" . PHP_EOL, 3, ERROR_LOG_FILE);
         return false;

@@ -5,9 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>AdminLTE 3 | <?= $title ?? ''; ?></title>
 
+	<base href="<?php base_url('/') ?>">
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <!-- Font Awesome -->
+    <link href="<?= base_url('/assets/vendor/bootstrap/css/bootstrap.min.css') ?>" rel="stylesheet">
     <link rel="stylesheet" href="<?= base_url('/assets/admin/plugins/fontawesome-free/css/all.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/admin/plugins/select2/css/select2.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/admin/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css'); ?>">
@@ -15,6 +17,19 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= base_url('/assets/admin/dist/css/adminlte.min.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('/assets/admin/main.css'); ?>">
+
+	<?php if (!empty($styles)): ?>
+        <?php foreach ($styles as $style): ?>
+            <link rel="stylesheet" href="<?= $style; ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if (!empty($header_scripts)): ?>
+        <?php foreach ($header_scripts as $header_script): ?>
+            <script src="<?= $header_script; ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
+
     <!-- Favicons -->
     <link rel="icon" href="<?= base_url('/images/framework.png'); ?>">
 </head>
@@ -167,15 +182,26 @@
             <span class="brand-text font-weight-light">AdminLTE 3</span>
         </a>
 
+		<?php
+			if(isset($_SESSION['user']) && $_SESSION['user']['image']){
+				$avatar = $_SESSION['user']['image'];
+				$name = $_SESSION['user']['name'];
+			} else {
+				$avatar = '';
+				$name = $_SESSION['user']['name'];
+			}
+		
+		?>
+
         <!-- Sidebar -->
         <div class="sidebar">
             <!-- Sidebar user (optional) -->
             <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                 <div class="image">
-                    <img src="<?= base_url('/assets/admin/dist/img/user2-160x160.jpg'); ?>" class="img-circle elevation-2" alt="User Image">
+                    <img src="<?= $avatar ?>" class="img-circle elevation-2" alt="User Image">
                 </div>
                 <div class="info">
-                    <a href="#" class="d-block">Alexander Pierce</a>
+                    <a href="#" class="d-block"><?= $name ?></a>
                 </div>
             </div>
 
@@ -203,7 +229,12 @@
                             <p>Posts</p>
                         </a>
                     </li>
-
+                    <li class="nav-item">
+                        <a href="<?= base_url('/admin/users'); ?>" class="nav-link">
+                            <i class="nav-icon fas fa-copy"></i>
+                            <p>Users</p>
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a href="<?= base_url('/admin/categories'); ?>" class="nav-link">
                             <i class="nav-icon fas fa-list"></i>
@@ -222,6 +253,24 @@
                         <a href="<?= base_url('/admin/media'); ?>" class="nav-link">
                             <i class="nav-icon fas fa-images"></i>
                             <p>Media</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url('/admin/emails'); ?>" class="nav-link">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p>Emails</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url('/admin/voiting'); ?>" class="nav-link">
+                            <i class="nav-icon fas fa-vote-yea"></i>
+                            <p>Voiting</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="<?= base_url('/admin/tasks'); ?>" class="nav-link">
+							<i class="nav-icon fas fa-tasks"></i>
+                            <p>Tasks</p>
                         </a>
                     </li>
                 </ul>
@@ -265,6 +314,11 @@
 <!-- AdminLTE App -->
 <script src="<?= base_url('/assets/admin/dist/js/adminlte.min.js'); ?>"></script>
 <!-- AdminLTE for demo purposes -->
+<?php if (!empty($footer_scripts)): ?>
+	<?php foreach ($footer_scripts as $footer_script): ?>
+		<script src="<?= $footer_script; ?>"></script>
+	<?php endforeach; ?>
+<?php endif; ?>
 <script src="<?= base_url('/assets/admin/dist/js/demo.js'); ?>"></script>
 <script src="<?= base_url('/assets/admin/plugins/copy-on-click/copy-on-click.js'); ?>"></script>
 <script src="<?= base_url('/assets/admin/main.js'); ?>"></script>

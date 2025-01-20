@@ -9,7 +9,7 @@
     <title>ZenBlog :: <?= $title ?? ''; ?></title>
     <meta content="<?= $description ?? ''; ?>" name="description">
     <meta content="<?= $keywords ?? ''; ?>" name="keywords">
-
+    <?= get_csrf_meta(); ?>
     <!-- Favicons -->
     <link rel="icon" href="<?= base_url('/images/framework.png'); ?>">
 
@@ -30,13 +30,17 @@
     <link href="<?= base_url('/assets/css/variables.css') ?>" rel="stylesheet">
     <link href="<?= base_url('/assets/css/main.css') ?>" rel="stylesheet">
 
-    <!-- =======================================================
-    * Template Name: ZenBlog
-    * Updated: Sep 18 2023 with Bootstrap v5.3.2
-    * Template URL: https://bootstrapmade.com/zenblog-bootstrap-blog-template/
-    * Author: BootstrapMade.com
-    * License: https:///bootstrapmade.com/license/
-    ======================================================== -->
+	<?php if (!empty($styles)): ?>
+        <?php foreach ($styles as $style): ?>
+            <link rel="stylesheet" href="<?= $style; ?>">
+        <?php endforeach; ?>
+    <?php endif; ?>
+
+    <?php if (!empty($header_scripts)): ?>
+        <?php foreach ($header_scripts as $header_script): ?>
+            <script src="<?= $header_script; ?>"></script>
+        <?php endforeach; ?>
+    <?php endif; ?>
 </head>
 
 <body>
@@ -66,16 +70,21 @@
                 <li><a href="<?= base_url('/contact'); ?>">Contact</a></li>
                 <li class="dropdown"><a><span>Cabinet</span> <i class="bi bi-chevron-down dropdown-indicator"></i></a>
                     <ul>
-                        <?php if (check_auth()): ?>
+                        <?php if (is_admin()): ?>
                             <li><a href="#">Hello, <?= session()->get('user')['name']; ?></a></li>
                             <li><a href="<?= base_url('/logout'); ?>">Logout</a></li>
-                        <?php else: ?>
-                            <li><a href="<?= base_url('/register'); ?>">Register</a></li>
+                        <?php elseif(is_user()): ?>
+							<li><a href="#">Hello, <?= session()->get('user')['name']; ?></a></li>
+                            <li><a href="<?= base_url('/logout'); ?>">Logout</a></li>
+						<?php else: ?>
+							<li><a href="<?= base_url('/register'); ?>">Register</a></li>
                             <li><a href="<?= base_url('/login'); ?>">Login</a></li>
                         <?php endif; ?>
                     </ul>
                 </li>
-                <li><a href="<?= base_url('/admin'); ?>">Admin</a></li>
+				<?php if (is_admin()): ?>
+                	<li><a class="px-3 py-2 bg-black ms-2 text-white" href="<?= base_url('/admin'); ?>">Admin</a></li>
+				<?php endif; ?>
             </ul>
         </nav><!-- .navbar -->
 
@@ -97,9 +106,6 @@
                     <button class="btn js-search-close"><span class="bi-x"></span></button>
                 </form>
             </div><!-- End Search Form -->
-
         </div>
-
     </div>
-
 </header><!-- End Header -->
